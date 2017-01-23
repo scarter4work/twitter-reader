@@ -1,0 +1,88 @@
+
+<html>
+<head>
+    <!-- Jasmine References -->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jasmine/2.5.2/jasmine.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/2.5.2/jasmine.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/2.5.2/jasmine-html.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jasmine/2.5.2/boot.min.js"></script>
+
+    <!-- Angular and Angular Mock references -->
+    <script type="text/javascript" src="https://code.angularjs.org/1.6.1/angular.min.js"></script>
+    <script type="text/javascript" src="https://code.angularjs.org/1.6.1/angular-mocks.js"></script>
+    <script src="./js/controllers.js"></script>
+</head>
+<body></body>
+<script type="text/javascript">
+    /* Test Code */
+    describe('twitterReader', function () {
+        var $httpBackend, $rootScope, $timeout, createController, getTweetsHandler;
+
+        // Set up the module
+        beforeEach(module('twitterReader'));
+
+        beforeEach(inject(function($injector) {
+            // Set up the mock http service responses
+            $httpBackend = $injector.get('$httpBackend');
+
+            // backend definition common for all tests
+            getTweetsHandler = $httpBackend.when('GET', '/fetchTweets')
+                .respond([
+                    {"text":"Brands can now leverage @CommerceCloud and Facebook in new ways to drive conversion! Learn more:… https://t.co/DxGVbZGVoj"},
+                    {
+                        "text":"Your New Favorite Resource in 2017 💡 The Salesforce Content Hub: https://t.co/xyJqkQyZil https://t.co/Ht1NZcuDMX"
+                    },
+                    {
+                        "text":"📑 How to Turn Performance Reviews Into Culture Wins: https://t.co/3HHvVTHZHX https://t.co/9da2HwDFiV"
+                    },
+                    {
+                        "text":"7 Books to Read Now About Sales Compensation: https://t.co/yQlyVlnQu3 https://t.co/wya9dUaJsP"
+                    },
+                    {
+                        "text":"Take a moment to relish in a moment of silence, happiness, or calm. 🙏 Be on the way to a happier you: https://t.co/6b4Vg3Rr44"
+                    },
+                    {
+                        "text":"💰 Close More Sales With These 11 Quick and Easy Tips: https://t.co/9ArKMTFNms"
+                    },
+                    {
+                        "text":"It's been an exciting week for Salesforce in Davos at the World Economic Forum! #WEF17 https://t.co/Ws5fMoorQZ"
+                    },
+                    {
+                        "text":"Get ready for the trail ahead! Earn badges for a chance to win great prizes until Feb 9th: https://t.co/eC6Wmsx3zk… https://t.co/FeRtooNb3G"
+                    },
+                    {
+                        "text":"@hughcurran We can help unsubscribe you. Feel free to DM us with your email address."
+                    },
+                    {
+                        "text":"10 Scientifically Proven Tactics to Stay Productive: https://t.co/SpHYTIZXg1 https://t.co/M2uwTuzPlv"
+                    }
+                ]);
+
+            // Get hold of a scope (i.e. the root scope)
+            $rootScope = $injector.get('$scope');
+
+            $timeout = $injector.get('$timeout');
+
+            // The $controller service is used to create instances of controllers
+            var $controller = $injector.get('$controller');
+
+            createController = function() {
+                return $controller('TwitterReaderController', {'$scope' : $rootScope, '$timeout': $timeout});
+            };
+        }));
+
+        afterEach(function() {
+            $httpBackend.verifyNoOutstandingExpectation();
+            $httpBackend.verifyNoOutstandingRequest();
+        });
+
+        it('bring back a list of 10 tweets', function() {
+            $httpBackend.expectGET('/fetchTweets');
+            var controller = createController();
+            $scope.getSalesforceTweets();
+            $httpBackend.flush();
+            expect($scope.tweets.length).toBe(10);
+        });
+    });
+</script>
+</html>
