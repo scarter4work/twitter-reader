@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html data-ng-app="twitterReader">
+<head>
+	<meta charset="ISO-8859-1">
+	<title>Twitter Reader</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
+	<script src="./js/controllers.js"></script>
+</head>
+<body data-ng-controller="TwitterReaderController">
+	<div style="display: table">
+		<div style="display: table-cell">
+			<h3>Recent Salesforce Tweets (@salesforce)</h3>
+		</div>
+		<div style="display: table-cell">&nbsp;&nbsp;&nbsp;</div>
+		<div style="display: table-cell">
+			Filter Tweets: <input name="filterTweetsByStringMatch" data-ng-model="query"/>
+		</div>
+    </div>
+	<div data-ng-repeat="tweet in tweets | filter: query">
+		<div style="display: table; border: 10px solid skyblue; width: 500px">
+			<div style="display: table-cell">
+				<img style="display: inline-block" data-ng-src="{{tweet.user.profileImageUrl}}" src="#"/>
+			</div>
+			<div style="display: table-cell; vertical-align: top">
+				<span><span style="display: inline-block; font-weight: bold">{{tweet.user.name}}</span><span style="display: inline-block">(@{{tweet.user.screenName}})</span></span>
+				<p>
+					{{tweet.text}}
+				</p>
+				<p>
+					Message was retweeted {{tweet.retweetCount}} times.
+				</p>
+			</div>
+		</div>
+		<p></p>
+	</div>
+</body>
+</html>
